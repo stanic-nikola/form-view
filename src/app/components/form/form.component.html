@@ -1,67 +1,79 @@
-<div fxLayout="column" fxLayoutAlign="center center" style="width: 100%;">
-    <mat-card class="mat-elevation-z4" style="width: 60%;">
+<div fxLayout="column" fxLayoutAlign="center center" class="container-width">
+    <mat-card class="mat-elevation-z4 form-card">
         <mat-card-content>
-            <div fxLayout="row" fxLayoutAlign="center center" style=" width: 100%;">
-                <p style="font-weight: 500; font-size: 26px;">Form</p>
+            <div fxLayout="row" fxLayoutAlign="center center" class="container-width">
+                <h1>Form</h1>
             </div>
-            <form [formGroup]="personalDataForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px"
-                style="width: 100%;" autocomplete="off">
-                <div fxLayout="column" style="width: 100%;">
+            <form [formGroup]="personalDataForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="start start"
+                fxLayoutGap="8px" class="container-width" autocomplete="off">
+                <div fxLayout="column" class="container-width">
                     <mat-form-field appearance="fill">
                         <mat-label>Anrede</mat-label>
                         <mat-select formControlName="salutation">
                             <mat-option *ngFor="let salutation of salutations" [value]="salutation">{{ salutation
                                 }}</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="personalDataForm.controls.salutation.invalid">Not valid</mat-error>
+                        <mat-error *ngIf="personalDataForm.controls.salutation.invalid">Ungültige Eingabe</mat-error>
                     </mat-form-field>
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="8px" class="container-width">
+                        <mat-form-field appearance="fill" class="container-width">
+                            <mat-label>Vorname</mat-label>
+                            <input matInput formControlName="name" maxlength="35">
+                            <mat-error *ngIf="personalDataForm.controls.name.invalid">Ungültige Eingabe</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="container-width">
+                            <mat-label>Nachname</mat-label>
+                            <input matInput formControlName="surname" maxlength="35">
+                            <mat-error *ngIf="personalDataForm.controls.surname.invalid">Ungültige Eingabe</mat-error>
+                        </mat-form-field>
+                    </div>
                     <mat-form-field appearance="fill">
-                        <mat-label>Vorname</mat-label>
-                        <input matInput formControlName="name" maxlength="35">
-                        <mat-error *ngIf="personalDataForm.controls.name.invalid">Not valid</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Nachname</mat-label>
-                        <input matInput formControlName="surname" maxlength="35">
-                        <mat-error *ngIf="personalDataForm.controls.surname.invalid">Not valid</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Geburstdatum</mat-label>
-                        <input matInput [readonly]="true" [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                        <mat-label>Geburtsdatum</mat-label>
+                        <input matInput [readonly]="true" [max]="maxDate" [matDatepicker]="picker"
                             formControlName="birthdate">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
-                        <mat-error *ngIf="personalDataForm.controls.birthdate.invalid">Not valid</mat-error>
+                        <mat-error *ngIf="personalDataForm.controls.birthdate.hasError('required')">
+                            Dieses Feld is pflichtig
+                        </mat-error>
+                        <mat-error *ngIf="personalDataForm.controls.birthdate.hasError('dateNotInPast')">
+                            Das Geburtsdatum muss in der Vergangenheit liegen
+                        </mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill">
                         <mat-label>Addresse</mat-label>
                         <input matInput formControlName="street" maxlength="45">
-                        <mat-error *ngIf="personalDataForm.controls.street.invalid">Not valid</mat-error>
+                        <mat-error *ngIf="personalDataForm.controls.street.invalid">Ungültige Eingabe</mat-error>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Postalzahl</mat-label>
-                        <input matInput formControlName="zipcode">
-                        <mat-error *ngIf="personalDataForm.controls.zipcode.invalid">Not valid</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Ort</mat-label>
-                        <input matInput formControlName="city" maxlength="32">
-                        <mat-error *ngIf="personalDataForm.controls.city.invalid">Not valid</mat-error>
-                    </mat-form-field>
+                    <div fxLayout.lt-md="column" fxLayout="row" fxLayoutGap="8px" class="container-width">
+                        <mat-form-field appearance="fill" style="width: 40%;">
+                            <mat-label>Postleitzahl</mat-label>
+                            <input matInput formControlName="zipcode">
+                            <mat-error *ngIf="personalDataForm.controls.zipcode.hasError('invalidPostcode')">
+                                Die Postleitzahl muss 5-stellig sein
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" style="width: 60%;">
+                            <mat-label>Ort</mat-label>
+                            <input matInput formControlName="city" maxlength="32">
+                        </mat-form-field>
+                    </div>
                     <mat-form-field appearance="fill">
                         <mat-label>Land</mat-label>
                         <mat-select formControlName="country">
-                            <mat-option *ngFor="let country of countries" [value]="country">
-                                {{country.country}}
+                            <mat-option *ngFor="let country of countries" [value]="country.code">
+                                {{ country.name }}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="personalDataForm.controls.country.invalid">Not valid</mat-error>
+                        <mat-error *ngIf="personalDataForm.controls.country.hasError('required')">
+                            Dieses Feld is pflichtig
+                        </mat-error>
                     </mat-form-field>
-
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px" style="width: 100%;">
-                    <button mat-raised-button type="button" class="large-button" color="primary">Submit</button>
+                <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="8px" class="container-width">
+                    <button mat-raised-button type="submit" [disabled]="personalDataForm.invalid" class="large-button"
+                        color="primary">Absenden</button>
                 </div>
             </form>
         </mat-card-content>

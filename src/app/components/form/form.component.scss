@@ -1,0 +1,15 @@
+.form-card {
+  width: 60%;
+  margin: auto;
+}
+
+.container-width {
+  width: 100%;
+}
+
+::ng-deep .snack-success {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
